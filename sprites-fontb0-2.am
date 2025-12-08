@@ -1,9 +1,10 @@
 # *****************************************************************************
 #  Graphics assets generation for SyndicatFX.
 # *****************************************************************************
-#  @file sprites-fontb1-2.am
-#      Automake rules neccessary to build `fontb1-2` menu font sprites.
-#      Font 1 - font_bulky_corpo ltgren/dkgren.
+#  @file sprites-fontb0-2.am
+#      Automake rules neccessary to build `fontb0-2` and `fontb1-2` menu fonts.
+#      Font 0 - font_bulky_corpo dkgren.
+#      Font 1 - font_bulky_corpo ltgren.
 #      Detail 2 - 12 px height.
 #  @author   Tomasz Lis
 #  @par  Copying and copyrights:
@@ -13,10 +14,11 @@
 #      (at your option) any later version.
 # *****************************************************************************
 
+fontb0_2_files = data/fontb0-2.dat data/fontb0-2.tab
 fontb1_2_files = data/fontb1-2.dat data/fontb1-2.tab
 
 # List of font letters which can be colorized
-fontb1_2_chars = \
+fontb0_2_chars = \
   0027 002c 002d 002e 002f \
   0041 0042 0043 0044 0045 0046 0047 0048 0049 004a 004b 004c 004d 004e 004f \
   0050 0051 0052 0053 0054 0055 0056 0057 0058 0059 005a 005c \
@@ -25,19 +27,44 @@ fontb1_2_chars = \
   0104 0106 0118 0141 0144 015a 0178 0179 017b \
   1ea0 1ecc
 # List of non-letters or other sprites to pass without colorization
-fontb1_2_charnames_nomod = \
+fontb0_2_charnames_nomod = \
   empty char_u0020
+
+fontb0_2_sprites_gen = \
+  font_bulky_corpo-12-dkgren/rect_12.png \
+  $(foreach num,$(fontb0_2_chars),font_bulky_corpo-12-dkgren/char_u$(num).png)
+fontb0_2_sprites_cp = \
+  $(foreach name,$(fontb0_2_charnames_nomod),$(top_srcdir)/font_bulky_corpo-12-white/$(name).png)
+
 fontb1_2_sprites_gen = \
   font_bulky_corpo-12-ltgren/rect_12.png \
-  $(foreach num,$(fontb1_2_chars),font_bulky_corpo-12-ltgren/char_u$(num).png)
+  $(foreach num,$(fontb0_2_chars),font_bulky_corpo-12-ltgren/char_u$(num).png)
 fontb1_2_sprites_cp = \
-  $(foreach name,$(fontb1_2_charnames_nomod),$(top_srcdir)/font_bulky_corpo-12-white/$(name).png)
+  $(foreach name,$(fontb0_2_charnames_nomod),$(top_srcdir)/font_bulky_corpo-12-white/$(name).png)
+
+data/fontb0-2.tab: data/fontb0-2.dat
+
+data/fontb0-2.dat: font_bulky_corpo-12-dkgren/filelist-fontb0-2.txt $(top_srcdir)/data/feproj-std.pal $(fontb0_2_sprites_gen)
+
+font_bulky_corpo-12-dkgren/filelist-fontb0-2.txt: $(top_srcdir)/font_bulky_corpo-12-white/filelist-fontb0-2.txt
+	$(MKDIR_P) "$(@D)"
+	cp -p -t "$(@D)" $(fontb0_2_sprites_cp)
+	cp -p "$<" "$@"
+
+# Use ImageMagick to generate dark green sprites from the white ones
+font_bulky_corpo-12-dkgren/%.png: $(top_srcdir)/font_bulky_corpo-12-white/%.png
+	$(MKDIR_P) "$(@D)"
+	$(MAGICK_CONVERT) "$<" -colorspace RGB \
+        -channel R +level 7%,11% \
+        -channel G +level 27%,57% \
+        -channel B +level 1%,1% \
+        +channel -colorspace RGB "$@"
 
 data/fontb1-2.tab: data/fontb1-2.dat
 
 data/fontb1-2.dat: font_bulky_corpo-12-ltgren/filelist-fontb1-2.txt $(top_srcdir)/data/feproj-std.pal $(fontb1_2_sprites_gen)
 
-font_bulky_corpo-12-ltgren/filelist-fontb1-2.txt: $(top_srcdir)/font_bulky_corpo-12-white/filelist-fontb1-2.txt
+font_bulky_corpo-12-ltgren/filelist-fontb1-2.txt: $(top_srcdir)/font_bulky_corpo-12-white/filelist-fontb0-2.txt
 	$(MKDIR_P) "$(@D)"
 	cp -p -t "$(@D)" $(fontb1_2_sprites_cp)
 	cp -p "$<" "$@"

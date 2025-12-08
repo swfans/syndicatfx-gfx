@@ -1,6 +1,9 @@
 ACLOCAL_AMFLAGS = --install -I m4
 
-include $(srcdir)/sprites-fontb1-2.am
+include $(srcdir)/sprites-fontb0-2.am
+
+font0_DATA = $(fontb0_2_files)
+font0dir = $(prefix)/$(PARENT_PACKAGE)/data
 
 font1_DATA = $(fontb1_2_files)
 font1dir = $(prefix)/$(PARENT_PACKAGE)/data
