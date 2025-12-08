@@ -1,5 +1,10 @@
 ACLOCAL_AMFLAGS = --install -I m4
 
+include $(srcdir)/sprites-fontb1-2.am
+
+font1_DATA = $(fontb1_2_files)
+font1dir = $(prefix)/$(PARENT_PACKAGE)/data
+
 data/mspr-0.tab: data/mspr-0.dat
 
 data/mspr-0.dat: $(top_srcdir)/filelist-mspr-0.txt $(top_srcdir)/data/feproj-std.pal
@@ -14,7 +19,7 @@ mspr_0dir = $(prefix)/$(PARENT_PACKAGE)/data
 docs_DATA = README.md gfx_config.h
 docsdir = $(prefix)/$(PARENT_PACKAGE)
 
-EXTRA_DIST = docs mspr_0
+EXTRA_DIST = docs font1 mspr_0
 
 install-data-hook:
 	cd "$(DESTDIR)${prefix}/$(PARENT_PACKAGE)"; \

@@ -32,6 +32,18 @@ ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 PKG_PROG_PKG_CONFIG
 AC_PROG_MKDIR_P
 
+AC_CHECK_PROGS(MAGICK_CONVERT, [$MAGICK magick convert], [magick-notfound],
+  [${PATH}${PATH_SEPARATOR}/usr/local/bin${PATH_SEPARATOR}${srcdir}/bin])
+AS_VAR_IF([MAGICK_CONVERT], [magick-notfound],
+  [AC_MSG_ERROR([Tool imagemagick not found in bin dir or PATH dirs. Install it before configuring.])], [])
+AS_VAR_IF([MAGICK_CONVERT], [magick], [AS_VAR_APPEND([MAGICK_CONVERT], [" convert"])], [])
+
+AC_CHECK_PROGS(MAGICK_MONTAGE, [$MAGICK magick montage], [magick-notfound],
+  [${PATH}${PATH_SEPARATOR}/usr/local/bin${PATH_SEPARATOR}${srcdir}/bin])
+AS_VAR_IF([MAGICK_MONTAGE], [magick-notfound],
+  [AC_MSG_ERROR([Tool imagemagick not found in bin dir or PATH dirs. Install it before configuring.])], [])
+AS_VAR_IF([MAGICK_MONTAGE], [magick], [AS_VAR_APPEND([MAGICK_MONTAGE], [" montage"])], [])
+
 AC_PATH_PROG([PNGTORAW], [pngpal2raw], [pngpal2raw-notfound],
   [${PATH}${PATH_SEPARATOR}/usr/local/bin${PATH_SEPARATOR}${srcdir}/bin])
 AS_VAR_IF([PNGTORAW], [pngpal2raw-notfound],
